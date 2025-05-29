@@ -6,8 +6,9 @@ st.set_page_config(page_title="Cadastro de Demandas", layout="centered")
 st.title("Cadastro de Demandas")
 
 with st.form("formulario_demanda"):
+    titulo = st.text_input("Título da demanda")  # <-- CAMPO OBRIGATÓRIO
     nome_responsavel = st.text_input("Nome do responsável")
-    email = st.text_input("Email")
+    email_responsavel = st.text_input("Email")
     descricao = st.text_area("Descrição da demanda")
     prioridade = st.selectbox("Prioridade", ["Alta", "Média", "Baixa"])
     prazo_entrega = st.date_input("Prazo de entrega")
@@ -16,9 +17,10 @@ with st.form("formulario_demanda"):
 
 if enviar:
     dados = {
-        "nome_responsavel": nome_responsavel,
-        "email": email,
+        "titulo": titulo,
         "descricao": descricao,
+        "nome_responsavel": nome_responsavel,
+        "email_responsavel": email_responsavel,
         "prioridade": prioridade,
         "prazo_entrega": str(prazo_entrega),
         "status": status,
