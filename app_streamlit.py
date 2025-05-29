@@ -2,30 +2,41 @@
 import streamlit as st
 import requests
 
+st.set_page_config(page_title="Cadastro de Demandas", layout="centered")
 st.title("Cadastro de Demandas")
 
-nome_responsavel = st.text_input("Nome do responsável")
-email = st.text_input("Email")
-descricao = st.text_area("Descrição da demanda")
-prioridade = st.selectbox("Prioridade", ["Alta", "Média", "Baixa"])
-prazo_entrega = st.date_input("Prazo de entrega")
-status = st.selectbox("Status", ["Aberta", "Em andamento", "Concluída"])
+with st.form("formulario_demanda"):
+    nome_responsavel = st.text_input("Nome do responsável")
+    email = st.text_input("Email")
+    descricao = st.text_area("Descrição da demanda")
+    prioridade = st.selectbox("Prioridade", ["Alta", "Média", "Baixa"])
+    prazo_entrega = st.date_input("Prazo de entrega")
+    status = st.selectbox("Status", ["Aberta", "Em andamento", "Concluída"])
+    enviar = st.form_submit_button("Enviar Demanda")
 
-if st.button("Enviar Demanda"):
-    payload = {
+if enviar:
+    dados = {
         "nome_responsavel": nome_responsavel,
         "email": email,
         "descricao": descricao,
         "prioridade": prioridade,
         "prazo_entrega": str(prazo_entrega),
-        "status": status
+        "status": status,
     }
 
     try:
-        response = requests.post("https://assistente-demandas-3.onrender.com/demandas/", json=payload)
+        st.info("Enviando dados para o backend...")
+        response = requests.post(
+            "https://assistente-demandas-3.onrender.com/demandas/",
+            json=dados,
+            timeout=10
+        )
+        st.code(response.text)
         if response.status_code == 200:
             st.success("Demanda enviada com sucesso!")
         else:
-            st.error(f"Erro ao enviar: {response.status_code} - {response.text}")
+            st.error(f"Erro {response.status_code}: {response.text}")
+    except requests.exceptions.RequestException as e:
+        st.error(f"Falha na requisição: {e}")
     except Exception as e:
-        st.error(f"Erro ao enviar: {e}")
+        st.error(f"Erro inesperado: {e}")
