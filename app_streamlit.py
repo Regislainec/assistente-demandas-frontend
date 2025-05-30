@@ -42,3 +42,8 @@ if enviar:
         st.error(f"Falha na requisição: {e}")
     except Exception as e:
         st.error(f"Erro inesperado: {e}")
+reajuste_necessario = st.checkbox("Necessita de reajuste/refazer trabalho?")
+justificativa_reajuste = ""
+
+if reajuste_necessario:
+    justificativa_reajuste = st.text_area("Justificativa do reajuste")
